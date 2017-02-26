@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+		http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.scijava</groupId>
+		<artifactId>pom-scijava</artifactId>
+		<version>14.0.0</version>
+		<relativePath />
+	</parent>
+
+	<groupId>ch.fmi</groupId>
+	<artifactId>fmi-trackmate-addons</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+
+	<name>FMI TrackMate Add-ons</name>
+	<description>Add-ons for TrackMate in Fiji</description>
+	<url>http://github.com/fmi-faim/fmi-trackmate-addons/</url>
+	<inceptionYear>2017</inceptionYear>
+	<organization>
+		<name>FMI</name>
+		<url>http://www.fmi.ch/</url>
+	</organization>
+	<licenses>
+		<license>
+			<name>Simplified BSD License</name>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<!-- See https://imagej.net/Team -->
+		<developer>
+			<id>imagejan</id>
+			<name>Jan Eglinger</name>
+			<url>http://imagej.net/User:Eglinger</url>
+			<roles>
+				<role>founder</role>
+				<role>lead</role>
+				<role>developer</role>
+				<role>debugger</role>
+				<role>reviewer</role>
+				<role>support</role>
+				<role>maintainer</role>
+			</roles>
+		</developer>
+	</developers>
+	<contributors>
+		<contributor>
+			<name>None</name>
+		</contributor>
+	</contributors>
+
+	<mailingLists>
+		<mailingList>
+			<name>ImageJ Forum</name>
+			<archive>http://forum.imagej.net/</archive>
+		</mailingList>
+	</mailingLists>
+
+	<scm>
+		<connection>scm:git:git://github.com/fmi-faim/fmi-trackmate-addons</connection>
+		<developerConnection>scm:git:git@github.com:fmi-faim/fmi-trackmate-addons</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/fmi-faim/fmi-trackmate-addons</url>
+	</scm>
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/fmi-faim/fmi-trackmate-addons/issues</url>
+	</issueManagement>
+	<ciManagement>
+		<system>None</system>
+	</ciManagement>
+
+	<properties>
+		<package-name>ch.fmi</package-name>
+		<main-class>ch.fmi.MaxQualitySpotAnalyzer</main-class>
+		<license.licenseName>bsd_2</license.licenseName>
+		<license.copyrightOwners>Friedrich Miescher Institute for Biomedical Research</license.copyrightOwners>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>imagej.public</id>
+			<url>http://maven.imagej.net/content/groups/public</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>TrackMate_</artifactId>
+		</dependency>
+	</dependencies>
+</project>
