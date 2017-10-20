@@ -11,7 +11,7 @@
 
 	<groupId>ch.fmi</groupId>
 	<artifactId>fmi-trackmate-addons</artifactId>
-	<version>0.1.2-SNAPSHOT</version>
+	<version>0.1.3-SNAPSHOT</version>
 
 	<name>FMI TrackMate Add-ons</name>
 	<description>Add-ons for TrackMate in Fiji</description>
