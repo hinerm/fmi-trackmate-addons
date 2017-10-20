@@ -11,7 +11,7 @@
 
 	<groupId>ch.fmi</groupId>
 	<artifactId>fmi-trackmate-addons</artifactId>
-	<version>0.1.2-SNAPSHOT</version>
+	<version>0.1.2</version>
 
 	<name>FMI TrackMate Add-ons</name>
 	<description>Add-ons for TrackMate in Fiji</description>
@@ -61,7 +61,7 @@
 	<scm>
 		<connection>scm:git:git://github.com/fmi-faim/fmi-trackmate-addons</connection>
 		<developerConnection>scm:git:git@github.com:fmi-faim/fmi-trackmate-addons</developerConnection>
-		<tag>HEAD</tag>
+		<tag>fmi-trackmate-addons-0.1.2</tag>
 		<url>https://github.com/fmi-faim/fmi-trackmate-addons</url>
 	</scm>
 	<issueManagement>
