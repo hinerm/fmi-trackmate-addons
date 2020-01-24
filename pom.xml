@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>26.0.0</version>
+		<version>27.0.1</version>
 		<relativePath />
 	</parent>
 
 	<groupId>ch.fmi</groupId>
 	<artifactId>fmi-trackmate-addons</artifactId>
-	<version>0.1.3-SNAPSHOT</version>
+	<version>0.2.0-SNAPSHOT</version>
 
 	<name>FMI TrackMate Add-ons</name>
 	<description>Add-ons for TrackMate in Fiji</description>
@@ -69,23 +69,17 @@
 		<url>https://github.com/fmi-faim/fmi-trackmate-addons/issues</url>
 	</issueManagement>
 	<ciManagement>
-		<system>None</system>
+		<system>Travis CI</system>
+		<url>https://travis-ci.org/fmi-faim/fmi-trackmate-addons</url>
 	</ciManagement>
 
 	<properties>
 		<package-name>ch.fmi</package-name>
-		<main-class>ch.fmi.MaxQualitySpotAnalyzer</main-class>
+
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>Friedrich Miescher Institute for Biomedical Research</license.copyrightOwners>
 		<releaseProfiles>deploy-to-scijava</releaseProfiles>
 	</properties>
-
-	<repositories>
-		<repository>
-			<id>scijava.public</id>
-			<url>https://maven.scijava.org/content/groups/public</url>
-		</repository>
-	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -93,4 +87,11 @@
 			<artifactId>TrackMate_</artifactId>
 		</dependency>
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>scijava.public</id>
+			<url>https://maven.scijava.org/content/groups/public</url>
+		</repository>
+	</repositories>
 </project>
