@@ -94,6 +94,10 @@
 			<groupId>sc.fiji</groupId>
 			<artifactId>Descriptor_based_registration</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej-ops</artifactId>
+		</dependency>
 	</dependencies>
 
 	<repositories>
