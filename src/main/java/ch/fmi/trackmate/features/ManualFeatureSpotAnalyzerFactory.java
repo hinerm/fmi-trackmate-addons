@@ -1,4 +1,4 @@
-package ch.fmi.trackmate;
+package ch.fmi.trackmate.features;
 
 import java.util.ArrayList;
 import java.util.HashMap;
