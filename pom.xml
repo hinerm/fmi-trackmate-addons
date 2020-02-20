@@ -94,6 +94,11 @@
 			<groupId>sc.fiji</groupId>
 			<artifactId>Descriptor_based_registration</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.jgrapht</groupId>
+			<artifactId>jgrapht-core</artifactId>
+		</dependency>
 	</dependencies>
 
 	<repositories>
