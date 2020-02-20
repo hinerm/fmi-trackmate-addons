@@ -1,4 +1,4 @@
-package ch.fmi;
+package ch.fmi.trackmate.features;
 
 import java.util.Iterator;
 
