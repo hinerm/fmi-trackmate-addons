@@ -76,6 +76,9 @@
 	<properties>
 		<package-name>ch.fmi</package-name>
 
+		<TrackMate_.version>5.2.1-SNAPSHOT</TrackMate_.version>
+		<enforcer.skip>true</enforcer.skip>
+
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>Friedrich Miescher Institute for Biomedical Research</license.copyrightOwners>
 		<releaseProfiles>deploy-to-scijava</releaseProfiles>
@@ -98,6 +101,10 @@
 		<dependency>
 			<groupId>org.jgrapht</groupId>
 			<artifactId>jgrapht-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jgrapht</groupId>
+			<artifactId>jgrapht-io</artifactId>
 		</dependency>
 	</dependencies>
 
