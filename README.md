@@ -11,3 +11,4 @@ These addons for [TrackMate](https://imagej.net/TrackMate) include:
   * *Custom Double Spot Feature*
   * *Custom Integer Track Feature*
   * *Custom Double Track Feature*
+* *Point-cloud registration tracker*: a spot linking algorithm based on the *Descriptor-based registration* plugin and the `mpicbg` library in Fiji (currently performing a global descriptor matching over all the spots of a pair of frames)
