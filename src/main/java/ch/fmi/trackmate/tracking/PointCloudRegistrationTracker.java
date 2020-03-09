@@ -183,34 +183,9 @@ public class PointCloudRegistrationTracker implements SpotTracker {
 		double[] realPosition = new double[3];
 		int[] position = new int[3];
 		iterable.forEach(spot -> {
-			list.add(createPeak(spot, realPosition, position));
+			list.add(Spots.createPeak(spot, realPosition, position));
 		});
 		return list;
-	}
-
-	/**
-	 * Creates a new {@code DifferenceOfGaussianPeak} for a TrackMate {@code Spot}
-	 * 
-	 * TODO move this into a common utility class
-	 * 
-	 * @param spot {@code Spot} to be converted
-	 * @param realPos empty array to hold the real coordinates of the spot
-	 * @param pos empty array to hold the integer coordinates of the spot
-	 * @return a {@code DifferenceOfGaussianPeak} corresponding to the input {@code Spot}
-	 */
-	private DifferenceOfGaussianPeak<FloatType> createPeak(Spot spot,
-		double[] realPos, int[] pos)
-	{
-		spot.localize(realPos);
-		for (int i = 0; i < realPos.length; i++) {
-			pos[i] = (int) realPos[i];
-		}
-		DifferenceOfGaussianPeak<FloatType> p = new DifferenceOfGaussianPeak<>(pos,
-			new FloatType(), SpecialPoint.MAX);
-		for (int d = 0; d < realPos.length; d++) {
-			p.setSubPixelLocationOffset((float) (realPos[d] - pos[d]), d);
-		}
-		return p;
 	}
 
 	@Override
