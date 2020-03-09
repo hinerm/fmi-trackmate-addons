@@ -3,8 +3,15 @@ package ch.fmi.trackmate.tracking;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NavigableSet;
+import java.util.Set;
+import java.util.SortedSet;
 import java.util.Vector;
 
+import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
@@ -28,6 +35,7 @@ import process.Particle;
 public class PointCloudRegistrationTracker implements SpotTracker {
 
 	private SimpleWeightedGraph<Spot, DefaultWeightedEdge> graph;
+	private SimpleWeightedGraph<Spot, DefaultWeightedEdge> prunedGraph;
 	private final SpotCollection spots;
 
 	private int minNumInliers;
@@ -47,7 +55,7 @@ public class PointCloudRegistrationTracker implements SpotTracker {
 
 	@Override
 	public SimpleWeightedGraph<Spot, DefaultWeightedEdge> getResult() {
-		return graph;
+		return prunedGraph;
 	}
 
 	@Override
@@ -74,6 +82,7 @@ public class PointCloudRegistrationTracker implements SpotTracker {
 
 		// Create and populate graph
 		// TODO multi-threaded?
+		// TODO implement discard low coverage
 		graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
 		comparePairs.forEach(pair -> {
 			if (pair.inliers.size() < minNumInliers) return;
@@ -90,6 +99,67 @@ public class PointCloudRegistrationTracker implements SpotTracker {
 				graph.setEdgeWeight(edge, pair.model.getCost());
 			});
 		});
+
+		prunedGraph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+		ConnectivityInspector<Spot, DefaultWeightedEdge> graphInspector = new ConnectivityInspector<>(graph);
+
+		/*
+		// for all frames (keySet), iterate over all spots, and find spots in next (+1, +2) frame which are connected
+		NavigableSet<Integer> frames = spots.keySet();
+		for (Integer frame : frames) {
+			// get spots in frame
+			//System.out.println("Source frame: " + frame);
+			Iterable<Spot> currentSpots = spots.iterable(frame, false);
+			for (Spot source : currentSpots) {
+				boolean linkCreated = false;
+				Iterator<Integer> targetFrames = frames.tailSet(frame, false).iterator();
+				while (!linkCreated && targetFrames.hasNext()) {
+					// get spots in next frame
+					Integer targetFrame = targetFrames.next();
+					//System.out.println("Target frame: " + targetFrame);
+					Iterable<Spot> targetSpots = spots.iterable(targetFrame, false);
+					for (Spot target : targetSpots) {
+						if (graph.containsVertex(source) && graph.containsVertex(target) && graphInspector.pathExists(source, target)) {
+							prunedGraph.addVertex(source);
+							prunedGraph.addVertex(target);
+							DefaultWeightedEdge edge = prunedGraph.addEdge(source, target);
+							prunedGraph.setEdgeWeight(edge, -1);
+							linkCreated = true;
+						}
+					}
+				} // if any link found, or no more frames left, continue
+			}
+		}
+		*/
+
+		// Alternative approach:
+		// connected sets from graph
+		List<Set<Spot>> connectedSets = graphInspector.connectedSets();
+		for (Set<Spot> track : connectedSets) {
+			// Sorting necessary?
+			List<Spot> trackSpots = new ArrayList<>(track);
+			Collections.sort(trackSpots, (s1, s2) -> {
+				return s1.getFeature(Spot.FRAME).compareTo(s2.getFeature(Spot.FRAME));
+			});
+			// loop through list (remove first element?)
+			for (int i = 0; i < trackSpots.size(); i++) {
+				Spot source = trackSpots.get(i);
+				int sourceSpotFrame = source.getFeature(Spot.FRAME).intValue();
+				int firstLinkedFrame = Integer.MAX_VALUE;
+				for (int j = i + 1; j < trackSpots.size(); j++) {
+					Spot target = trackSpots.get(j);
+					int targetSpotFrame = target.getFeature(Spot.FRAME).intValue();
+					if (targetSpotFrame > firstLinkedFrame) break;
+					if (targetSpotFrame > sourceSpotFrame) {
+						firstLinkedFrame = targetSpotFrame;
+						prunedGraph.addVertex(source);
+						prunedGraph.addVertex(target);
+						DefaultWeightedEdge edge = prunedGraph.addEdge(source, target);
+						prunedGraph.setEdgeWeight(edge, -1);
+					}
+				}
+			}
+		}
 
 		return true;
 	}

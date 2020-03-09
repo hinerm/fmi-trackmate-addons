@@ -123,9 +123,9 @@ public class PointCloudRegistrationTrackerFactory implements
 		str.append("  Minimal number of inlier spots per comparison: " + minNumInliers + ".\n");
 		int frameRange = (int) sm.get(FRAME_RANGE);
 		str.append("  Range of frame intervals being compared: " + frameRange + ".\n");
-		int discardLowCoverage = (int) sm.get(DISCARD_LOW_COVERAGE);
+		boolean discardLowCoverage = (boolean) sm.get(DISCARD_LOW_COVERAGE);
 		str.append("  Discard pairs with low field-of-view coverage: " + discardLowCoverage + ".\n");
-		int minCoverage = (int) sm.get(MIN_COVERAGE_FACTOR);
+		double minCoverage = (double) sm.get(MIN_COVERAGE_FACTOR);
 		str.append("  Minimal fraction (of each dimension) covered by inliers within single frame: " + minCoverage + ".\n");
 		return str.toString();
 	}
@@ -182,7 +182,7 @@ public class PointCloudRegistrationTrackerFactory implements
 			return false;
 		}
 		if (!settings.containsKey(MIN_COVERAGE_FACTOR)
-				|| !(settings.get(MIN_COVERAGE_FACTOR) instanceof Integer)
+				|| !(settings.get(MIN_COVERAGE_FACTOR) instanceof Double)
 				|| (double) settings.get(MIN_COVERAGE_FACTOR) < 0
 				|| (double) settings.get(MIN_COVERAGE_FACTOR) > 1)
 		{
