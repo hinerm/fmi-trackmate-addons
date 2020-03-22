@@ -79,6 +79,9 @@
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>Friedrich Miescher Institute for Biomedical Research</license.copyrightOwners>
 		<releaseProfiles>deploy-to-scijava</releaseProfiles>
+
+		<imglib2.version>5.9.0-SNAPSHOT</imglib2.version>
+		<enforcer.skip>true</enforcer.skip>
 	</properties>
 
 	<dependencies>
