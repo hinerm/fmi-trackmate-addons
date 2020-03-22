@@ -15,6 +15,12 @@ import fiji.plugin.trackmate.gui.ConfigurationPanel;
 import fiji.plugin.trackmate.tracking.SpotTracker;
 import fiji.plugin.trackmate.tracking.SpotTrackerFactory;
 
+/**
+ * {@link SpotTrackerFactory} for {@link PointCloudRegistrationTracker}
+ * 
+ * @author Jan Eglinger
+ * @deprecated superseded by {@link PointDescriptorTrackerFactory}
+ */
 @Plugin(type = SpotTrackerFactory.class)
 public class PointCloudRegistrationTrackerFactory implements
 	SpotTrackerFactory
@@ -22,7 +28,7 @@ public class PointCloudRegistrationTrackerFactory implements
 
 	private static final String INFO_TEXT = "<html>This tracker uses descriptor-based registration to link points between point clouds.</html>";
 	private static final String KEY = "POINT_CLOUD_REGISTRATION_TRACKER";
-	private static final String NAME = "Point-cloud registration tracker";
+	private static final String NAME = "Point-cloud registration tracker (deprecated)";
 
 	// Minimal number of inlier spots per comparison
 	static final String MIN_NUM_INLIERS = "MIN_NUM_INLIERS";

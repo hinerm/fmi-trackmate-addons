@@ -9,7 +9,12 @@ import javax.swing.JLabel;
 import fiji.plugin.trackmate.gui.ConfigurationPanel;
 import fiji.plugin.trackmate.gui.panels.components.JNumericTextField;
 
-
+/**
+ * {@link ConfigurationPanel} for {@link PointCloudRegistrationTrackerFactory}
+ * 
+ * @author Jan Eglinger
+ * @deprecated superseded by {@link PointDescriptorTrackerConfigPanel}
+ */
 public class PointCloudRegistrationTrackerConfigPanel extends
 	ConfigurationPanel
 {

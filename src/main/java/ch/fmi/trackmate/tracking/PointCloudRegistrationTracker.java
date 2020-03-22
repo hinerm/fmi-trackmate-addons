@@ -31,7 +31,13 @@ import process.ComparePair;
 import process.Matching;
 import process.Particle;
 
-
+/**
+ * {@link SpotTracker} implementation using the Descriptor-based registration
+ * plugin to create links between point correspondences.
+ * 
+ * @author Jan Eglinger
+ * @deprecated superseded by {@link PointDescriptorTracker}
+ */
 public class PointCloudRegistrationTracker implements SpotTracker {
 
 	private SimpleWeightedGraph<Spot, DefaultWeightedEdge> graph;
