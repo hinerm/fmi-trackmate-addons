@@ -26,9 +26,17 @@ public class PointCloudRegistrationTrackerFactory implements
 	SpotTrackerFactory
 {
 
-	private static final String INFO_TEXT = "<html>This tracker uses descriptor-based registration to link points between point clouds.</html>";
+	private static final String INFO_TEXT = "<html>"
+			+ "This tracker uses descriptor-based registration to link points between point clouds.<br/>"
+			+ "The descriptor-based registration is robust to outliers, which is beneficial"
+			+ "in terms of false positive detections, but has the drawback that some movements"
+			+ "that are very distinct from a 'common' ensemble movement might not be detected."
+			+ "Consider using the descriptor-based tracker that takes into account the local neighbors"
+			+ "of each spot and is supposed to better deal with small ensembles showing a different"
+			+ "movement from the entire point cloud."
+			+ "</html>";
 	private static final String KEY = "POINT_CLOUD_REGISTRATION_TRACKER";
-	private static final String NAME = "Point-cloud registration tracker (deprecated)";
+	private static final String NAME = "Point-cloud registration tracker (old)";
 
 	// Minimal number of inlier spots per comparison
 	static final String MIN_NUM_INLIERS = "MIN_NUM_INLIERS";

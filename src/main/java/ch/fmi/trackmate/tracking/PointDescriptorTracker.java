@@ -51,7 +51,7 @@ public class PointDescriptorTracker extends BenchmarkAlgorithm implements SpotTr
 	private AtomicInteger atomicInteger;
 	private AtomicBoolean ok;
 	private Logger logger;
-	private double costThreshold = 100; // TODO make configurable
+	private double costThreshold;
 	private Set<Integer> excludedFrames;
 	private int maxInterval;
 	private double squareDistThreshold;
@@ -81,7 +81,7 @@ public class PointDescriptorTracker extends BenchmarkAlgorithm implements SpotTr
 
 	@Override
 	public boolean process() {
-		logger.log("Matching descriptors...");
+		logger.log("Matching descriptors...\n");
 		long startTime = System.currentTimeMillis();
 		ok = new AtomicBoolean(true);
 
@@ -93,15 +93,16 @@ public class PointDescriptorTracker extends BenchmarkAlgorithm implements SpotTr
 		// generate spot descriptors for all spots
 		// compute descriptor distances for pairs of spots
 		// cost function: lookup descriptor for spots, compute descriptor distance
-		costFunction = new DescriptorDistanceCostFunction(spotMapping);
+		costFunction = new DistanceConstrainedDescriptorDistanceCostFunction(spotMapping, squareDistThreshold);
 		// generate framePairs
 
 		final ArrayList<int[]> framePairs = generateFramePairs();
-		
+
 		atomicInteger = new AtomicInteger(0);
 		graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
-		
+
 		// multithreaded over all pairs: create cost matrix and run linker
+		logger.log("Computing links on " + numThreads + " threads.\n");
 		Parallelization.runWithNumThreads(numThreads, () -> createLinks(framePairs));
 
 		// TODO link segments to allow split and merge events (and gaps?)
@@ -127,7 +128,7 @@ public class PointDescriptorTracker extends BenchmarkAlgorithm implements SpotTr
 			if (!targets.iterator().hasNext()) continue;
 
 			// create cost matrix
-			JaqamanLinkingCostMatrixCreator<Spot, Spot> costMatrixCreator = new JaqamanLinkingCostMatrixCreator<>(sources, targets, costFunction, costThreshold , 1.05d, 1d);
+			JaqamanLinkingCostMatrixCreator<Spot, Spot> costMatrixCreator = new JaqamanLinkingCostMatrixCreator<>(sources, targets, costFunction, costThreshold , 2.0d, 1d);
 			JaqamanLinker<Spot, Spot> linker = new JaqamanLinker<>(costMatrixCreator);
 			if (!linker.checkInput() || !linker.process()) {
 				// update error message
@@ -141,22 +142,20 @@ public class PointDescriptorTracker extends BenchmarkAlgorithm implements SpotTr
 			Map<Spot, Double> costs = linker.getAssignmentCosts();
 			synchronized (graph) {
 				linkMap.forEach((sourceSpot, targetSpot) -> {
-					if (sourceSpot.squareDistanceTo(targetSpot) < squareDistThreshold) {
-						logger.log("Linking spots: " + sourceSpot + " -> " + targetSpot + ".\n");
-						// add edges to graph
-						double cost = costs.get(sourceSpot);
-						graph.addVertex(sourceSpot);
-						graph.addVertex(targetSpot);
-						DefaultWeightedEdge edge = graph.addEdge(sourceSpot, targetSpot);
-						if (edge == null) {
-							logger.error("Error creating edge.\n"); // Edge already present!
-						} else {
-							graph.setEdgeWeight(edge, cost);
-						}
+					logger.log("Linking spots: " + sourceSpot + " -> " + targetSpot + ".\n");
+					// add edges to graph
+					double cost = costs.get(sourceSpot);
+					graph.addVertex(sourceSpot);
+					graph.addVertex(targetSpot);
+					DefaultWeightedEdge edge = graph.addEdge(sourceSpot, targetSpot);
+					if (edge == null) {
+						logger.error("Error creating edge.\n"); // Edge already present!
+					} else {
+						graph.setEdgeWeight(edge, cost);
 					}
 				});
 			}
-		}		
+		}
 	}
 
 	private ArrayList<int[]> generateFramePairs() {
