@@ -3,6 +3,7 @@ package ch.fmi.trackmate.tracking;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 
 import fiji.plugin.trackmate.gui.ConfigurationPanel;
@@ -21,6 +22,7 @@ public class PointDescriptorTrackerConfigPanel extends ConfigurationPanel {
 	private JNumericTextField maxIntervalTextField;
 	private JNumericTextField costThresholdTextField;
 	private JNumericTextField maxDistanceTextField;
+	private JCheckBox pruneCheckBox;
 
 	public PointDescriptorTrackerConfigPanel() {
 		initGui();
@@ -46,6 +48,10 @@ public class PointDescriptorTrackerConfigPanel extends ConfigurationPanel {
 		add(new JLabel("Maximum linking distance"));
 		maxDistanceTextField = new JNumericTextField(PointDescriptorTrackerFactory.MAX_LINKING_DISTANCE);
 		add(maxDistanceTextField);
+
+		add(new JLabel("Return pruned graph"));
+		pruneCheckBox = new JCheckBox(PointDescriptorTrackerFactory.PRUNE_GRAPH);
+		add(pruneCheckBox);
 }
 
 	@Override
@@ -61,6 +67,7 @@ public class PointDescriptorTrackerConfigPanel extends ConfigurationPanel {
 		map.put(PointDescriptorTrackerFactory.MAX_INTERVAL, (int) maxIntervalTextField.getValue());
 		map.put(PointDescriptorTrackerFactory.COST_THRESHOLD, (double) costThresholdTextField.getValue());
 		map.put(PointDescriptorTrackerFactory.MAX_LINKING_DISTANCE, (double) maxDistanceTextField.getValue());
+		map.put(PointDescriptorTrackerFactory.PRUNE_GRAPH, (boolean) pruneCheckBox.isSelected());
 		return map;
 	}
 
@@ -71,5 +78,6 @@ public class PointDescriptorTrackerConfigPanel extends ConfigurationPanel {
 		maxIntervalTextField.setText("" + settings.get(PointDescriptorTrackerFactory.MAX_INTERVAL));
 		costThresholdTextField.setText("" + settings.get(PointDescriptorTrackerFactory.COST_THRESHOLD));
 		maxDistanceTextField.setText("" + settings.get(PointDescriptorTrackerFactory.MAX_LINKING_DISTANCE));
+		pruneCheckBox.setSelected((boolean) settings.get(PointDescriptorTrackerFactory.PRUNE_GRAPH));
 	}
 }

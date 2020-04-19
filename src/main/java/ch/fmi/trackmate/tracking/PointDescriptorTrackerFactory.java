@@ -33,12 +33,14 @@ public class PointDescriptorTrackerFactory implements SpotTrackerFactory {
 	static final String MAX_INTERVAL = "MAX_INTERVAL";
 	static final String COST_THRESHOLD = "COST_THRESHOLD";
 	static final String MAX_LINKING_DISTANCE = "MAX_LINKING_DISTANCE";
+	static final String PRUNE_GRAPH = "PRUNE_GRAPH";
 
 	static final Integer DEFAULT_SUBSET_NEIGHBORS = 5;
 	static final Integer DEFAULT_NUM_NEIGHBORS = 7;
 	static final Integer DEFAULT_MAX_INTERVAL = 5;
 	static final Double DEFAULT_COST_THRESHOLD = 100d;
 	static final Double DEFAULT_MAX_LINKING_DISTANCE = 10d;
+	static final Boolean DEFAULT_PRUNE_GRAPH = true;
 
 	private String errorMessage;
 
@@ -107,6 +109,12 @@ public class PointDescriptorTrackerFactory implements SpotTrackerFactory {
 			errorMessage = "Wrong parameter for " + MAX_LINKING_DISTANCE;
 			return false;
 		}
+		if (!settings.containsKey(PRUNE_GRAPH)
+				|| !(settings.get(PRUNE_GRAPH) instanceof Boolean))
+		{
+			errorMessage = "Wrong parameter for " + PRUNE_GRAPH;
+			return false;
+		}
 		return true;
 	}
 
@@ -117,7 +125,8 @@ public class PointDescriptorTrackerFactory implements SpotTrackerFactory {
 		int maxInterval = (int) settings.get(MAX_INTERVAL);
 		double costThreshold = (double) settings.get(COST_THRESHOLD);
 		double maxDistance = (double) settings.get(MAX_LINKING_DISTANCE);
-		return new PointDescriptorTracker(spots, subsetSize, numNeighbors, maxInterval, costThreshold, maxDistance*maxDistance);
+		boolean pruneGraph = (boolean) settings.get(PRUNE_GRAPH);
+		return new PointDescriptorTracker(spots, subsetSize, numNeighbors, maxInterval, costThreshold, maxDistance*maxDistance, pruneGraph);
 	}
 
 	@Override
@@ -129,6 +138,7 @@ public class PointDescriptorTrackerFactory implements SpotTrackerFactory {
 		settings.put(MAX_INTERVAL, DEFAULT_MAX_INTERVAL);
 		settings.put(COST_THRESHOLD, DEFAULT_COST_THRESHOLD);
 		settings.put(MAX_LINKING_DISTANCE, DEFAULT_MAX_LINKING_DISTANCE);
+		settings.put(PRUNE_GRAPH, DEFAULT_PRUNE_GRAPH);
 
 		return settings;
 	}
@@ -157,6 +167,8 @@ public class PointDescriptorTrackerFactory implements SpotTrackerFactory {
 		element.setAttribute(COST_THRESHOLD, "" + costThreshold);
 		double maxDistance = (double) settings.get(MAX_LINKING_DISTANCE);
 		element.setAttribute(MAX_LINKING_DISTANCE, "" + maxDistance);
+		boolean doPrune = (boolean) settings.get(PRUNE_GRAPH);
+		element.setAttribute(PRUNE_GRAPH, "" + doPrune);
 
 		return true;
 	}
@@ -176,6 +188,8 @@ public class PointDescriptorTrackerFactory implements SpotTrackerFactory {
 		str.append("  Cost threshold: " + costThreshold + ".\n");
 		double maxDistance = (double) settings.get(MAX_LINKING_DISTANCE);
 		str.append("  Maximal linking distance: " + maxDistance + ".\n");
+		boolean doPrune = (boolean) settings.get(PRUNE_GRAPH);
+		str.append("  Return pruned graph: " + doPrune + ".\n");
 
 		return str.toString();
 	}
@@ -197,6 +211,9 @@ public class PointDescriptorTrackerFactory implements SpotTrackerFactory {
 
 			double maxDistance = element.getAttribute(MAX_LINKING_DISTANCE).getDoubleValue();
 			settings.put(MAX_LINKING_DISTANCE, maxDistance);
+
+			boolean doPrune = element.getAttribute(PRUNE_GRAPH).getBooleanValue();
+			settings.put(PRUNE_GRAPH, doPrune);
 		}
 		catch (DataConversionException exc) {
 			errorMessage = "Error retrieving settings from XML: " + exc.toString();

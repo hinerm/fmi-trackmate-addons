@@ -41,33 +41,36 @@ import process.Particle;
  */
 public class PointDescriptorTracker extends BenchmarkAlgorithm implements SpotTracker {
 
+	private Logger logger;
 	private final SpotCollection spots;
-	private SimpleWeightedGraph<Spot, DefaultWeightedEdge> graph;
 	private Matcher matcher;
 	private int subsetSize;
 	private int numNeighbors;
 	private int numThreads;
+	private int maxInterval;
+	private double costThreshold;
+	private double squareDistThreshold;
+	private boolean doPruneGraph;
 	private DescriptorDistanceCostFunction costFunction;
 	private AtomicInteger atomicInteger;
 	private AtomicBoolean ok;
-	private Logger logger;
-	private double costThreshold;
 	private Set<Integer> excludedFrames;
-	private int maxInterval;
-	private double squareDistThreshold;
+	private SimpleWeightedGraph<Spot, DefaultWeightedEdge> graph;
+	private SimpleWeightedGraph<Spot, DefaultWeightedEdge> prunedGraph;
 
-	public PointDescriptorTracker(SpotCollection spots, int subsetSize, int numNeighbors, int maxInterval, double costThreshold, double squareDistThreshold) {
+	public PointDescriptorTracker(SpotCollection spots, int subsetSize, int numNeighbors, int maxInterval, double costThreshold, double squareDistThreshold, boolean pruneGraph) {
 		this.spots = spots;
 		this.subsetSize = subsetSize;
 		this.numNeighbors = numNeighbors;
 		this.maxInterval = maxInterval;
 		this.costThreshold = costThreshold;
 		this.squareDistThreshold = squareDistThreshold;
+		this.doPruneGraph = pruneGraph;
 	}
 
 	@Override
 	public SimpleWeightedGraph<Spot, DefaultWeightedEdge> getResult() {
-		return graph;
+		return doPruneGraph ? prunedGraph : graph;
 	}
 
 	@Override
@@ -108,6 +111,12 @@ public class PointDescriptorTracker extends BenchmarkAlgorithm implements SpotTr
 		// TODO link segments to allow split and merge events (and gaps?)
 		// for track starts (graph root nodes), search previous frame
 		// for track ends (graph leaf nodes), search next frame
+
+		if (doPruneGraph) {
+			// prune graph
+			logger.log("Pruning graph...\n");
+			prunedGraph = Tracks.prune(graph, true);
+		}
 
 		long endTime = System.currentTimeMillis();
 		processingTime = endTime - startTime;
@@ -175,7 +184,7 @@ public class PointDescriptorTracker extends BenchmarkAlgorithm implements SpotTr
 					continue;
 				}
 				// add framePair if difference smaller/equal maxInterval
-				if (frameB - frameA < maxInterval) {
+				if (frameB - frameA <= maxInterval) {
 					logger.log("Adding frame pair: " + frameA + "," + frameB + "\n");
 					framePairs.add(new int[] { frameA, frameB });					
 				}

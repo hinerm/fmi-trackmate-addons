@@ -147,6 +147,11 @@
 			<artifactId>jgrapht-core</artifactId>
 		</dependency>
 
+		<!-- Test dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
 	</dependencies>
 
 	<repositories>

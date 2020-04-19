@@ -106,66 +106,7 @@ public class PointCloudRegistrationTracker implements SpotTracker {
 			});
 		});
 
-		prunedGraph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
-		ConnectivityInspector<Spot, DefaultWeightedEdge> graphInspector = new ConnectivityInspector<>(graph);
-
-		/*
-		// for all frames (keySet), iterate over all spots, and find spots in next (+1, +2) frame which are connected
-		NavigableSet<Integer> frames = spots.keySet();
-		for (Integer frame : frames) {
-			// get spots in frame
-			//System.out.println("Source frame: " + frame);
-			Iterable<Spot> currentSpots = spots.iterable(frame, false);
-			for (Spot source : currentSpots) {
-				boolean linkCreated = false;
-				Iterator<Integer> targetFrames = frames.tailSet(frame, false).iterator();
-				while (!linkCreated && targetFrames.hasNext()) {
-					// get spots in next frame
-					Integer targetFrame = targetFrames.next();
-					//System.out.println("Target frame: " + targetFrame);
-					Iterable<Spot> targetSpots = spots.iterable(targetFrame, false);
-					for (Spot target : targetSpots) {
-						if (graph.containsVertex(source) && graph.containsVertex(target) && graphInspector.pathExists(source, target)) {
-							prunedGraph.addVertex(source);
-							prunedGraph.addVertex(target);
-							DefaultWeightedEdge edge = prunedGraph.addEdge(source, target);
-							prunedGraph.setEdgeWeight(edge, -1);
-							linkCreated = true;
-						}
-					}
-				} // if any link found, or no more frames left, continue
-			}
-		}
-		*/
-
-		// Alternative approach:
-		// connected sets from graph
-		List<Set<Spot>> connectedSets = graphInspector.connectedSets();
-		for (Set<Spot> track : connectedSets) {
-			// Sorting necessary?
-			List<Spot> trackSpots = new ArrayList<>(track);
-			Collections.sort(trackSpots, (s1, s2) -> {
-				return s1.getFeature(Spot.FRAME).compareTo(s2.getFeature(Spot.FRAME));
-			});
-			// loop through list (remove first element?)
-			for (int i = 0; i < trackSpots.size(); i++) {
-				Spot source = trackSpots.get(i);
-				int sourceSpotFrame = source.getFeature(Spot.FRAME).intValue();
-				int firstLinkedFrame = Integer.MAX_VALUE;
-				for (int j = i + 1; j < trackSpots.size(); j++) {
-					Spot target = trackSpots.get(j);
-					int targetSpotFrame = target.getFeature(Spot.FRAME).intValue();
-					if (targetSpotFrame > firstLinkedFrame) break;
-					if (targetSpotFrame > sourceSpotFrame) {
-						firstLinkedFrame = targetSpotFrame;
-						prunedGraph.addVertex(source);
-						prunedGraph.addVertex(target);
-						DefaultWeightedEdge edge = prunedGraph.addEdge(source, target);
-						prunedGraph.setEdgeWeight(edge, -1);
-					}
-				}
-			}
-		}
+		prunedGraph = Tracks.prune(graph, false);
 
 		return true;
 	}
