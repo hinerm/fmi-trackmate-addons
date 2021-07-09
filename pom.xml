@@ -69,8 +69,8 @@
 		<url>https://github.com/fmi-faim/fmi-trackmate-addons/issues</url>
 	</issueManagement>
 	<ciManagement>
-		<system>Travis CI</system>
-		<url>https://travis-ci.org/fmi-faim/fmi-trackmate-addons</url>
+		<system>GitHub Actions</system>
+		<url>https://github.com/fmi-faim/fmi-trackmate-addons/actions</url>
 	</ciManagement>
 
 	<properties>
